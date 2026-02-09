@@ -1,0 +1,122 @@
+###############################################################################
+# UNITY – GLOBAL (root + nested projects)
+###############################################################################
+
+# Ignore Unity generated folders (ANYWHERE)
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+**/[Mm]emoryCaptures/
+**/[Rr]ecordings/
+**/[Pp]ackage[Cc]ache/
+
+###############################################################################
+# UNITY – ASSETS & TOOLS
+###############################################################################
+
+# Asset Store tools (optional)
+# **/[Aa]ssets/AssetStoreTools*
+
+# JetBrains Rider plugin
+**/[Aa]ssets/Plugins/Editor/JetBrains*
+
+###############################################################################
+# IDE / EDITOR
+###############################################################################
+
+.vs/
+.vscode/
+.gradle/
+.consulo/
+ExportedObj/
+
+###############################################################################
+# VISUAL STUDIO / RIDER / UNITY SOLUTION FILES
+###############################################################################
+
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.opendb
+*.VC.db
+
+###############################################################################
+# UNITY META (generated)
+###############################################################################
+
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+###############################################################################
+# CRASH & LOG FILES
+###############################################################################
+
+sysinfo.txt
+mono_crash.mem*.blob
+crashlytics-build.properties
+
+###############################################################################
+# BUILDS / EXPORTS
+###############################################################################
+
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+*.x86
+*.x86_64
+
+###############################################################################
+# ADDRESSABLES
+###############################################################################
+
+**/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+
+###############################################################################
+# ANDROID STREAMING ASSETS (TEMP)
+###############################################################################
+
+**/[Aa]ssets/[Ss]treamingAssets/aa.meta
+**/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+###############################################################################
+# LARGE SOURCE FILES (avoid GitHub 100MB error)
+###############################################################################
+
+*.psd
+*.tga
+*.fbx
+*.blend
+*.wav
+*.mp4
+*.mov
+
+###############################################################################
+# OPTIONAL: GIT LFS (use ONLY if you enable LFS)
+###############################################################################
+# *.psd filter=lfs diff=lfs merge=lfs -text
+# *.fbx filter=lfs diff=lfs merge=lfs -text
+# *.tga filter=lfs diff=lfs merge=lfs -text
+# Editor / OS junk
+.vscode/
+*.swp
+*.slnx
+
+# Crash dumps
+mono_crash.mem.*.blob
+
+# Nested / duplicate Unity project (IMPORTANT)
+TDM-Shooter/
