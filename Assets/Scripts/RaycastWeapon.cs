@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+
 
 public class RaycastWeapon : MonoBehaviour
 {
@@ -28,11 +30,40 @@ public class RaycastWeapon : MonoBehaviour
 
     float accumulatedTime;
     float maxLifetime = 3f;
+    PhotonView photonView;
+
 
     // ✅ QUEUE INSTEAD OF LIST
     Queue<Bullet> bullets = new Queue<Bullet>();
 
     // ----------------------------------------------------
+
+    void Start()
+    {
+        photonView = GetComponentInParent<PhotonView>();
+
+        // Only local player needs aiming
+        if (!photonView.IsMine)
+            return;
+
+        Camera cam = Camera.main;
+        if (cam == null)
+        {
+            Debug.LogError("Main Camera not found");
+            return;
+        }
+
+        CrossHairTarget target =
+            cam.GetComponentInChildren<CrossHairTarget>();
+
+        if (target == null)
+        {
+            Debug.LogError("CrossHairTarget not found under Main Camera");
+            return;
+        }
+
+        raycastDestination = target.transform;
+    }
 
     Vector3 GetPosition(Bullet bullet)
     {
