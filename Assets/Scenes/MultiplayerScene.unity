@@ -764,7 +764,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 385055347}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 420258465}
+        m_TargetAssemblyTypeName: MultiplayerUI, Assembly-CSharp
+        m_MethodName: OnJoinRoomButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &385055347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1316,6 +1328,11 @@ MonoBehaviour:
   mainPanel: {fileID: 1959646875}
   createRoomPanel: {fileID: 843839738}
   joinRoomPanel: {fileID: 1230315373}
+  createRoomIdInput: {fileID: 994540285}
+  createPasswordInput: {fileID: 1805509831}
+  joinRoomIdInput: {fileID: 1614176021}
+  joinPasswordInput: {fileID: 1456885064}
+  photonLauncher: {fileID: 1245268566}
 --- !u!1 &425134052
 GameObject:
   m_ObjectHideFlags: 0
@@ -1398,7 +1415,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 425134055}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 420258465}
+        m_TargetAssemblyTypeName: MultiplayerUI, Assembly-CSharp
+        m_MethodName: OnCreateRoomButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &425134055
 MonoBehaviour:
   m_ObjectHideFlags: 0

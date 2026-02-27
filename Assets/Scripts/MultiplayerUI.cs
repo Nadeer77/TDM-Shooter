@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class MultiplayerUI : MonoBehaviour
 {
@@ -9,6 +11,16 @@ public class MultiplayerUI : MonoBehaviour
     [Header("Popup Panels")]
     public GameObject createRoomPanel;
     public GameObject joinRoomPanel;
+
+    [Header("Create Room Inputs")]
+    public TMP_InputField createRoomIdInput;
+    public TMP_InputField createPasswordInput;
+
+    [Header("Join Room Inputs")]
+    public TMP_InputField joinRoomIdInput;
+    public TMP_InputField joinPasswordInput;
+
+    public PhotonLauncher photonLauncher;
 
     void Start()
     {
@@ -37,5 +49,18 @@ public class MultiplayerUI : MonoBehaviour
     public void GoBackToHome()
     {
         SceneManager.LoadScene("HomeScene");
+    }
+    public void OnCreateRoomButtonClicked()
+    {
+        string roomId = createRoomIdInput.text;
+        string password = createPasswordInput.text;
+
+        photonLauncher.CreateRoom(roomId, password);
+    }
+    public void OnJoinRoomButtonClicked()
+    {
+        string roomId = joinRoomIdInput.text;
+
+        photonLauncher.JoinRoom(roomId);
     }
 }
