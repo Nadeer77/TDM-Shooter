@@ -2,11 +2,14 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using ExitGames.Client.Photon;
+using TMPro;
 
 public class PhotonLauncher : MonoBehaviourPunCallbacks
 {
+    public TextMeshProUGUI connectedText;
     void Start()
     {
+        connectedText.gameObject.SetActive(false);
         Debug.Log("Connecting to Photon...");
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -14,6 +17,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected to Photon Master Server");
+        connectedText.gameObject.SetActive(true);
         PhotonNetwork.JoinLobby();
     }
 

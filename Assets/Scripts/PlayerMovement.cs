@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon.Pun;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
+    PhotonView photonView;
     private CharacterController controller;
     private Animator animator;
 
@@ -20,12 +22,16 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        photonView = GetComponent<PhotonView>();
         controller = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
+        if (!photonView.IsMine)
+            return;
+
         ApplyGravity();
         MovePlayer();
         RotateWithCamera();
@@ -35,11 +41,17 @@ public class PlayerMovement : MonoBehaviour
     // ===== INPUT =====
     public void OnMove(InputValue value)
     {
+        if (!photonView.IsMine)
+            return;
+
         moveInput = value.Get<Vector2>();
     }
 
     public void OnJump(InputValue value)
     {
+        if (!photonView.IsMine)
+            return;
+            
         if (value.isPressed && controller.isGrounded)
         {
             verticalVelocity = jumpForce;
