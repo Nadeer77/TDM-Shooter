@@ -27,6 +27,13 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
+    void Start()
+    {
+        if (photonView.IsMine)
+        {
+            PauseManager.Instance.RegisterLocalPlayer(this);
+        }
+    }
     void Update()
     {
         if (!photonView.IsMine)
@@ -36,6 +43,18 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
         RotateWithCamera();
         UpdateAnimations();
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            if (PauseManager.Instance.isPaused)
+            {
+                PauseManager.Instance.Resume();
+            }
+            else
+            {
+                PauseManager.Instance.Pause();
+            }
+        }
     }
 
     // ===== INPUT =====

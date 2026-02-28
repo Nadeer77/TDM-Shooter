@@ -1,65 +1,170 @@
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using ExitGames.Client.Photon;
+using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class PhotonLauncher : MonoBehaviourPunCallbacks
 {
-    public TextMeshProUGUI connectedText;
+    public static PhotonLauncher Instance;
+
+    [Header("UI")]
+    public TextMeshProUGUI statusText;
+    public TextMeshProUGUI texteey;
+    public Transform parent;
+
+    // ---------------- LIFECYCLE ----------------
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
-        connectedText.gameObject.SetActive(false);
-        Debug.Log("Connecting to Photon...");
+        // parent=GameObject.FindWithTag("parent").GetComponent<Transform>();
+        // texteey=Instantiate(statusText,parent);
+        // texteey.gameObject.SetActive(false);
+
+        ShowMessage("Connecting to Photon");
         PhotonNetwork.ConnectUsingSettings();
     }
 
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        SceneManager.sceneLoaded+=LoadedScene;
+    }
+    public override void OnDisable()
+    {
+        SceneManager.sceneLoaded-=LoadedScene;
+    }
+
+    // ---------------- CONNECTION ----------------
+
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Connected to Photon Master Server");
-        connectedText.gameObject.SetActive(true);
+        ShowMessage("Connected to Photon");
         PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("Joined Lobby");
+        ShowMessage("Joined Lobby");
     }
 
+    // ---------------- ROOM ----------------
+
+    // YOU joined
     public override void OnJoinedRoom()
     {
-        Debug.Log("Joined Room Successfully");
+        if(texteey==null) Debug.Log("test is null when enteringn room");
+        //ShowMessage(PhotonNetwork.NickName + " joined the room");
+        Invoke("ShowMsgWhenJoinedRoom",2);
+        
+
         PhotonNetwork.LoadLevel("GameScene");
     }
-    public void CreateRoom(string roomId, string password)
+
+    void ShowMsgWhenJoinedRoom()
     {
-        if (string.IsNullOrEmpty(roomId))
-        {
-            Debug.LogError("Room ID is empty");
-            return;
-        }
+        Debug.Log(texteey==null);
+        ShowMessage(PhotonNetwork.NickName + " joined the room");
+    }
 
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 2;
+    // OTHER player joined
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log("called joined room");
+        
+        ShowMessage(newPlayer.NickName + " joined the room");
+    }
 
-        // Store password as custom room property
-        Hashtable customProps = new Hashtable();
-        customProps.Add("pwd", password);
+    // OTHER player left / disconnected
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        ShowMessage(otherPlayer.NickName + " left the room");
+    }
 
-        roomOptions.CustomRoomProperties = customProps;
-        roomOptions.CustomRoomPropertiesForLobby = new string[] { "pwd" };
+    // YOU left
+    public override void OnLeftRoom()
+    {
+        ShowMessage(PhotonNetwork.NickName + " left the room");
+        SceneManager.LoadScene("HomeScene");
+    }
 
-        PhotonNetwork.CreateRoom(roomId, roomOptions);
+    // YOU disconnected
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        ShowMessage(PhotonNetwork.NickName + " disconnected");
+        SceneManager.LoadScene("HomeScene");
+    }
+
+    // ---------------- ROOM ACTIONS ----------------
+
+    public void CreateRoom(string roomId)
+    {
+        if (string.IsNullOrEmpty(roomId)) return;
+
+        RoomOptions options = new RoomOptions { MaxPlayers = 2 };
+        PhotonNetwork.CreateRoom(roomId, options);
+
+        ShowMessage(PhotonNetwork.NickName + " created the room");
     }
 
     public void JoinRoom(string roomId)
     {
-        if (string.IsNullOrEmpty(roomId))
+        if (string.IsNullOrEmpty(roomId)) return;
+        PhotonNetwork.JoinRoom(roomId);
+    }
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    // ---------------- UI ----------------
+    
+    void ShowMessage(string msg)
+    {
+        if (texteey == null)
         {
-            Debug.LogError("Room ID is empty");
+            Debug.Log("text is null");
             return;
         }
+        Debug.Log("txt is not nnull");
 
-        PhotonNetwork.JoinRoom(roomId);
+        texteey.text = msg;
+        texteey.gameObject.SetActive(true);
+
+        CancelInvoke(nameof(HideMessage));
+        Invoke(nameof(HideMessage), 3f);
+    }
+
+    void HideMessage()
+    {
+        if (parent!=null&& statusText != null)
+            texteey.gameObject.SetActive(false);
+    }
+
+    // handling secons scene
+    public void LoadedScene(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.buildIndex == 2|| scene.buildIndex==0)
+        {
+            Debug.Log(scene.buildIndex+" scene number");
+          parent=GameObject.FindWithTag("parent").GetComponent<Transform>();
+          
+          texteey=Instantiate(statusText,parent);
+          texteey.gameObject.SetActive(false);
+        }
     }
 }

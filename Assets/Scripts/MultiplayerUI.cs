@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -19,8 +18,6 @@ public class MultiplayerUI : MonoBehaviour
     [Header("Join Room Inputs")]
     public TMP_InputField joinRoomIdInput;
     public TMP_InputField joinPasswordInput;
-
-    public PhotonLauncher photonLauncher;
 
     void Start()
     {
@@ -46,21 +43,38 @@ public class MultiplayerUI : MonoBehaviour
         createRoomPanel.SetActive(false);
         joinRoomPanel.SetActive(false);
     }
+
     public void GoBackToHome()
     {
         SceneManager.LoadScene("HomeScene");
     }
+
     public void OnCreateRoomButtonClicked()
     {
         string roomId = createRoomIdInput.text;
         string password = createPasswordInput.text;
 
-        photonLauncher.CreateRoom(roomId, password);
+        if (PhotonLauncher.Instance != null)
+        {
+            PhotonLauncher.Instance.CreateRoom(roomId);
+        }
+        else
+        {
+            Debug.LogError("PhotonLauncher instance not found!");
+        }
     }
+
     public void OnJoinRoomButtonClicked()
     {
         string roomId = joinRoomIdInput.text;
 
-        photonLauncher.JoinRoom(roomId);
+        if (PhotonLauncher.Instance != null)
+        {
+            PhotonLauncher.Instance.JoinRoom(roomId);
+        }
+        else
+        {
+            Debug.LogError("PhotonLauncher instance not found!");
+        }
     }
 }
