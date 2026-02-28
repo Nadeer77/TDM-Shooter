@@ -58,7 +58,7 @@ public class CharacterAiming : MonoBehaviour
         }
         aimLayer.weight = Mathf.Clamp01(aimLayer.weight);
 
-        if(Input.GetButtonDown("Fire1"))
+        if(Input.GetButtonDown("Fire1") && isAiming)
         {
             weapon.StartFiring();
         }

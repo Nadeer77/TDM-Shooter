@@ -2011,10 +2011,10 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 1
     UseFollowTarget:
-      Enabled: 0
+      Enabled: 1
       YOffset: 0
     Damping: 0.5
-    SmoothingTime: 0
+    SmoothingTime: 0.1
   TerrainResolution:
     Enabled: 1
     TerrainLayers:

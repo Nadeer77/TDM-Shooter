@@ -26,6 +26,8 @@ public class RaycastWeapon : MonoBehaviour
 
     public PhotonView playerView;
 
+    public AudioSource muzzleAudio;
+
     Ray ray;
     RaycastHit hitInfo;
 
@@ -70,6 +72,7 @@ public class RaycastWeapon : MonoBehaviour
     public void StopFiring()
     {
         isFiring = false;
+        playerView.RPC("BulletSoundStop", RpcTarget.All);
     }
 
     public void UpdateFiring(float deltaTime)
@@ -154,9 +157,26 @@ public class RaycastWeapon : MonoBehaviour
     [PunRPC]
     void ShowEffect()
     {
+        // Muzzle flash
         foreach (var particle in muzzleFlash)
         {
             particle.Emit(1);
+        }
+
+        // Muzzle sound
+        if (muzzleAudio != null)
+        {
+            muzzleAudio.Play();
+        }
+    }
+
+    [PunRPC]
+    void BulletSoundStop()
+    {
+        // Muzzle sound stop
+        if (muzzleAudio != null)
+        {
+            muzzleAudio.Stop();
         }
     }
 }
