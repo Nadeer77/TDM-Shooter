@@ -176,22 +176,12 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 5377459728152494807}
   - {fileID: 1246574733234626097}
-  - {fileID: 349150824591858915}
-  - {fileID: 142627562411036087}
+  - {fileID: 4922397903768162347}
   - {fileID: 2039039808213294179}
   - {fileID: 8625202923031286843}
   - {fileID: 3813000957745332369}
   - {fileID: 7161515167916392374}
   - {fileID: 6560913623375131018}
-  - {fileID: 3571707170005553806}
-  - {fileID: 4026891721014935739}
-  - {fileID: 8007864395883948213}
-  - {fileID: 3623957078116250729}
-  - {fileID: 8112082810679859825}
-  - {fileID: 5332722307726873978}
-  - {fileID: 4206950080596308064}
-  - {fileID: 2301315356821046982}
-  - {fileID: 1168701854619645003}
   - {fileID: 2677346865188150164}
   - {fileID: 4014893821167235149}
   - {fileID: 8428327862982018721}
@@ -16405,6 +16395,7 @@ GameObject:
   - component: {fileID: 7047298056711332432}
   - component: {fileID: 3355703797895193986}
   - component: {fileID: 349150824591858915}
+  - component: {fileID: 5948216798080290780}
   m_Layer: 0
   m_Name: WeaponPivot
   m_TagString: Untagged
@@ -16457,6 +16448,7 @@ MonoBehaviour:
   tracerEffect: {fileID: 7484327650942568817, guid: d8cb17d955519f716b7c1cbf657bfb23, type: 3}
   raycastOrigin: {fileID: 8300403461210027766}
   raycastDestination: {fileID: 7969044563719152909}
+  playerView: {fileID: 5948216798080290780}
 --- !u!114 &349150824591858915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16473,6 +16465,39 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &5948216798080290780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2500501649662005570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 349150824591858915}
+  - {fileID: 142627562411036087}
+  - {fileID: 3571707170005553806}
+  - {fileID: 4026891721014935739}
+  - {fileID: 8007864395883948213}
+  - {fileID: 3623957078116250729}
+  - {fileID: 8112082810679859825}
+  - {fileID: 5332722307726873978}
+  - {fileID: 4206950080596308064}
+  - {fileID: 2301315356821046982}
+  - {fileID: 1168701854619645003}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &2527093431766466087
 GameObject:
   m_ObjectHideFlags: 0

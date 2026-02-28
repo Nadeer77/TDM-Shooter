@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class RaycastWeapon : MonoBehaviour
@@ -22,6 +23,8 @@ public class RaycastWeapon : MonoBehaviour
 
     public Transform raycastOrigin;
     public Transform raycastDestination;
+
+    public PhotonView playerView;
 
     Ray ray;
     RaycastHit hitInfo;
@@ -138,10 +141,7 @@ public class RaycastWeapon : MonoBehaviour
 
     void FireBullet()
     {
-        foreach (var particle in muzzleFlash)
-        {
-            particle.Emit(1);
-        }
+        playerView.RPC("ShowEffect", RpcTarget.All);
 
         Vector3 velocity =
             (raycastDestination.position - raycastOrigin.position).normalized
@@ -149,5 +149,14 @@ public class RaycastWeapon : MonoBehaviour
 
         Bullet bullet = CreateBullet(raycastOrigin.position, velocity);
         bullets.Enqueue(bullet);
+    }
+
+    [PunRPC]
+    void ShowEffect()
+    {
+        foreach (var particle in muzzleFlash)
+        {
+            particle.Emit(1);
+        }
     }
 }
