@@ -16451,6 +16451,7 @@ MonoBehaviour:
   raycastDestination: {fileID: 7969044563719152909}
   playerView: {fileID: 5948216798080290780}
   muzzleAudio: {fileID: 237291336240500646}
+  fireSound: {fileID: 8300000, guid: f996a84abee820920900721ee1ce2539, type: 3}
 --- !u!114 &349150824591858915
 MonoBehaviour:
   m_ObjectHideFlags: 0
