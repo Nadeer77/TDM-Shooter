@@ -43,6 +43,7 @@ MonoBehaviour:
   - BulletSoundStop
   - RPC_FireBullet
   - RPC_SetAimState
+  - TakeDamage
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

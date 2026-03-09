@@ -131,8 +131,23 @@ public class RaycastWeapon : MonoBehaviour
             hitEffect.transform.forward = hitInfo.normal;
             hitEffect.Emit(1);
 
+            PlayerHealth targetHealth = hitInfo.collider.GetComponentInParent<PlayerHealth>();
+
+            if (targetHealth != null && playerView.IsMine)
+            {
+                PhotonView targetPV = targetHealth.GetComponent<PhotonView>();
+
+                if (targetPV != null)
+                {
+                    targetPV.RPC("TakeDamage", RpcTarget.All, 10);
+                }
+            }
+
+            // Stop the bullet immediately
             bullet.tracer.transform.position = hitInfo.point;
             bullet.time = maxLifetime;
+
+            // return;   // ⭐ IMPORTANT
         }
         else
         {
