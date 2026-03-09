@@ -17,7 +17,7 @@ public class PlayerHealth : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, int attackerID)
     {
         if (!photonView.IsMine)
             return;
@@ -34,13 +34,15 @@ public class PlayerHealth : MonoBehaviourPun
 
         if (currentHealth <= 0)
         {
-            Die();
+            Die(attackerID);
         }
     }
 
-    void Die()
+    void Die(int attackerID)
     {
         Debug.Log("Player Died");
+
+        Debug.Log("Killed by player: " + attackerID);
 
         // Reset health
         currentHealth = maxHealth;

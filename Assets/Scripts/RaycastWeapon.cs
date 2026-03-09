@@ -139,7 +139,7 @@ public class RaycastWeapon : MonoBehaviour
 
                 if (targetPV != null)
                 {
-                    targetPV.RPC("TakeDamage", RpcTarget.All, 10);
+                    targetPV.RPC("TakeDamage", RpcTarget.All, 10, playerView.Owner.ActorNumber);
                 }
             }
 
@@ -147,7 +147,7 @@ public class RaycastWeapon : MonoBehaviour
             bullet.tracer.transform.position = hitInfo.point;
             bullet.time = maxLifetime;
 
-            // return;   // ⭐ IMPORTANT
+            return;   // ⭐ IMPORTANT
         }
         else
         {

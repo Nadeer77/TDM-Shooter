@@ -66,7 +66,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     // YOU joined
     public override void OnJoinedRoom()
     {
-        if(texteey==null) Debug.Log("test is null when enteringn room");
+        if(texteey==null) Debug.Log("test is null when entering room");
         //ShowMessage(PhotonNetwork.NickName + " joined the room");
         Invoke("ShowMsgWhenJoinedRoom",2);
         
