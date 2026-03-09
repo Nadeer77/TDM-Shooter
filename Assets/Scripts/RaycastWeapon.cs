@@ -25,7 +25,7 @@ public class RaycastWeapon : MonoBehaviour
     public Transform raycastDestination;
 
     public PhotonView playerView;
-
+ 
     public AudioSource muzzleAudio;
     public AudioClip fireSound;
 
@@ -73,7 +73,6 @@ public class RaycastWeapon : MonoBehaviour
     public void StopFiring()
     {
         isFiring = false;
-        // playerView.RPC("BulletSoundStop", RpcTarget.All);
     }
 
     public void UpdateFiring(float deltaTime)
@@ -145,39 +144,32 @@ public class RaycastWeapon : MonoBehaviour
 
     void FireBullet()
     {
-        playerView.RPC("ShowEffect", RpcTarget.All);
+        Vector3 direction =
+            (raycastDestination.position - raycastOrigin.position).normalized;
 
-        Vector3 velocity =
-            (raycastDestination.position - raycastOrigin.position).normalized
-            * bulletSpeed;
-
-        Bullet bullet = CreateBullet(raycastOrigin.position, velocity);
-        bullets.Enqueue(bullet);
+        GetComponent<PhotonView>().RPC("RPC_FireBullet",RpcTarget.All,raycastOrigin.position,direction);
     }
 
     [PunRPC]
-    void ShowEffect()
+    void RPC_FireBullet(Vector3 startPosition, Vector3 direction)
     {
-        // Muzzle flash
+        // Muzzle Flash
         foreach (var particle in muzzleFlash)
         {
             particle.Emit(1);
         }
 
-        // Muzzle sound
+        // Gun Sound
         if (muzzleAudio != null)
         {
             muzzleAudio.PlayOneShot(fireSound);
         }
-    }
 
-    // [PunRPC]
-    // void BulletSoundStop()
-    // {
-    //     // Muzzle sound stop
-    //     if (muzzleAudio != null)
-    //     {
-    //         muzzleAudio.Stop();
-    //     }
-    // }
+        // Create Bullet
+        Vector3 velocity = direction * bulletSpeed;
+
+        Bullet bullet = CreateBullet(startPosition, velocity);
+
+        bullets.Enqueue(bullet);
+    }
 }

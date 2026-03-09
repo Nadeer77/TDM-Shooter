@@ -41,6 +41,8 @@ MonoBehaviour:
   - RespawnSpaceship
   - ShowEffect
   - BulletSoundStop
+  - RPC_FireBullet
+  - RPC_SetAimState
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

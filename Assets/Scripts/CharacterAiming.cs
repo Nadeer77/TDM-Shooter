@@ -20,6 +20,9 @@ public class CharacterAiming : MonoBehaviour
     {
         photonView = GetComponent<PhotonView>();
 
+        // ALWAYS get weapon reference
+        weapon = GetComponentInChildren<RaycastWeapon>();
+
         if (!photonView.IsMine)
             return;
 
@@ -27,7 +30,6 @@ public class CharacterAiming : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        weapon = GetComponentInChildren<RaycastWeapon>();
     }
 
     void FixedUpdate()
@@ -45,9 +47,33 @@ public class CharacterAiming : MonoBehaviour
 
     void Update()
     {
-        if (!photonView.IsMine)
-            return;
+        // INPUT ONLY FOR LOCAL PLAYER
+        if (photonView.IsMine)
+        {
+            if(Input.GetButtonDown("Fire1") && isAiming)
+            {
+                weapon.StartFiring();
+            }
 
+            if(weapon.isFiring)
+            {
+                weapon.UpdateFiring(Time.deltaTime);
+            }
+
+            if(Input.GetButtonUp("Fire1"))
+            {
+                weapon.StopFiring();
+            }
+
+            // ⭐ CAMERA AIM FIX (THIS IS THE IMPORTANT PART)
+            Vector3 targetPoint =
+                mainCamera.transform.position +
+                mainCamera.transform.forward * 100f;
+
+            weapon.raycastDestination.position = targetPoint;
+        }
+
+        // AIM LAYER UPDATE FOR EVERYONE
         if (isAiming)
         {
             aimLayer.weight += Time.deltaTime / aimDuration;
@@ -56,24 +82,11 @@ public class CharacterAiming : MonoBehaviour
         {
             aimLayer.weight -= Time.deltaTime / aimDuration;
         }
+
         aimLayer.weight = Mathf.Clamp01(aimLayer.weight);
 
-        if(Input.GetButtonDown("Fire1") && isAiming)
-        {
-            weapon.StartFiring();
-        }
-
-        if(weapon.isFiring)
-        {
-            weapon.UpdateFiring(Time.deltaTime);
-        }
-
+        // BULLET UPDATE FOR EVERYONE
         weapon.UpdateBullets(Time.deltaTime);
-
-        if(Input.GetButtonUp("Fire1"))
-        {
-            weapon.StopFiring();
-        }
     }
 
     // ===== NEW INPUT SYSTEM CALLBACK =====
@@ -81,7 +94,15 @@ public class CharacterAiming : MonoBehaviour
     {
         if (!photonView.IsMine)
             return;
-            
-        isAiming = value.Get<float>() > 0.5f;
+
+        bool newAimState = value.Get<float>() > 0.5f;
+
+        photonView.RPC("RPC_SetAimState", RpcTarget.All, newAimState);
+    }
+
+    [PunRPC]
+    void RPC_SetAimState(bool aiming)
+    {
+        isAiming = aiming;
     }
 }
