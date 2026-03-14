@@ -3,15 +3,14 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-using UnityEngine.UI;
 
 public class PhotonLauncher : MonoBehaviourPunCallbacks
 {
     public static PhotonLauncher Instance;
 
     [Header("UI")]
-    public TextMeshProUGUI statusText;
-    public TextMeshProUGUI texteey;
+    public TextMeshProUGUI statusText;          // Prefab
+    public TextMeshProUGUI statusTextInstance;  // Runtime instance
     public Transform parent;
 
     // ---------------- LIFECYCLE ----------------
@@ -30,10 +29,6 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        // parent=GameObject.FindWithTag("parent").GetComponent<Transform>();
-        // texteey=Instantiate(statusText,parent);
-        // texteey.gameObject.SetActive(false);
-
         ShowMessage("Connecting to Photon");
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -41,11 +36,12 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     public override void OnEnable()
     {
         base.OnEnable();
-        SceneManager.sceneLoaded+=LoadedScene;
+        SceneManager.sceneLoaded += LoadedScene;
     }
+
     public override void OnDisable()
     {
-        SceneManager.sceneLoaded-=LoadedScene;
+        SceneManager.sceneLoaded -= LoadedScene;
     }
 
     // ---------------- CONNECTION ----------------
@@ -63,48 +59,37 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
 
     // ---------------- ROOM ----------------
 
-    // YOU joined
     public override void OnJoinedRoom()
     {
-        if(texteey==null) Debug.Log("test is null when entering room");
-        //ShowMessage(PhotonNetwork.NickName + " joined the room");
-        Invoke("ShowMsgWhenJoinedRoom",2);
-        
+        Invoke(nameof(ShowMsgWhenJoinedRoom), 1.5f);
 
         PhotonNetwork.LoadLevel("GameScene");
     }
 
     void ShowMsgWhenJoinedRoom()
     {
-        Debug.Log(texteey==null);
         ShowMessage(PhotonNetwork.NickName + " joined the room");
     }
 
-    // OTHER player joined
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log("called joined room");
-        
         ShowMessage(newPlayer.NickName + " joined the room");
     }
 
-    // OTHER player left / disconnected
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         ShowMessage(otherPlayer.NickName + " left the room");
     }
 
-    // YOU left
     public override void OnLeftRoom()
     {
         ShowMessage(PhotonNetwork.NickName + " left the room");
         SceneManager.LoadScene("HomeScene");
     }
 
-    // YOU disconnected
     public override void OnDisconnected(DisconnectCause cause)
     {
-        ShowMessage(PhotonNetwork.NickName + " disconnected");
+        ShowMessage("Disconnected from server");
         SceneManager.LoadScene("HomeScene");
     }
 
@@ -114,16 +99,23 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     {
         if (string.IsNullOrEmpty(roomId)) return;
 
-        RoomOptions options = new RoomOptions { MaxPlayers = 2 };
+        RoomOptions options = new RoomOptions
+        {
+            MaxPlayers = 2
+        };
+
         PhotonNetwork.CreateRoom(roomId, options);
 
-        ShowMessage(PhotonNetwork.NickName + " created the room");
+        ShowMessage("Creating room...");
     }
 
     public void JoinRoom(string roomId)
     {
         if (string.IsNullOrEmpty(roomId)) return;
+
         PhotonNetwork.JoinRoom(roomId);
+
+        ShowMessage("Joining room...");
     }
 
     public void LeaveRoom()
@@ -131,19 +123,30 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
+    // ---------------- ROOM FAILURES ----------------
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        ShowMessage("Room is full, Try to create one");
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        ShowMessage("Room already exists. Try another ID.");
+    }
+
     // ---------------- UI ----------------
-    
+
     void ShowMessage(string msg)
     {
-        if (texteey == null)
+        if (statusTextInstance == null || statusTextInstance.gameObject == null)
         {
-            Debug.Log("text is null");
+            Debug.Log("Status text not ready yet");
             return;
         }
-        Debug.Log("txt is not nnull");
 
-        texteey.text = msg;
-        texteey.gameObject.SetActive(true);
+        statusTextInstance.text = msg;
+        statusTextInstance.gameObject.SetActive(true);
 
         CancelInvoke(nameof(HideMessage));
         Invoke(nameof(HideMessage), 3f);
@@ -151,20 +154,32 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
 
     void HideMessage()
     {
-        if (parent!=null&& statusText != null)
-            texteey.gameObject.SetActive(false);
+        if (statusTextInstance != null)
+        {
+            statusTextInstance.gameObject.SetActive(false);
+        }
     }
 
-    // handling secons scene
+    // ---------------- SCENE LOADING ----------------
+
     public void LoadedScene(Scene scene, LoadSceneMode mode)
     {
-        if(scene.buildIndex == 2|| scene.buildIndex==0)
+        GameObject parentObj = GameObject.FindWithTag("parent");
+
+        if (parentObj != null)
         {
-            Debug.Log(scene.buildIndex+" scene number");
-          parent=GameObject.FindWithTag("parent").GetComponent<Transform>();
-          
-          texteey=Instantiate(statusText,parent);
-          texteey.gameObject.SetActive(false);
+            parent = parentObj.transform;
+
+            // Prevent multiple status texts
+            if (statusTextInstance == null)
+            {
+                statusTextInstance = Instantiate(statusText, parent);
+                statusTextInstance.gameObject.SetActive(false);
+            }
+            else
+            {
+                statusTextInstance.transform.SetParent(parent);
+            }
         }
     }
 }

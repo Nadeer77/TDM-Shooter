@@ -44,6 +44,11 @@ public class PlayerHealth : MonoBehaviourPun
 
         Debug.Log("Killed by player: " + attackerID);
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddKill(attackerID);
+        }
+
         // Reset health
         currentHealth = maxHealth;
 

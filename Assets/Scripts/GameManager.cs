@@ -1,10 +1,26 @@
 using Photon.Pun;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
     public Transform spawnLeft;
     public Transform spawnRight;
+
+    Dictionary<int, int> playerScores = new Dictionary<int, int>();
+
+    void Awake()
+{
+    if (Instance == null)
+    {
+        Instance = this;
+    }
+    else
+    {
+        Destroy(gameObject);
+    }
+}
 
     void Start()
     {
@@ -16,7 +32,7 @@ public class GameManager : MonoBehaviour
         Vector3 spawnPos;
 
         // First player in room
-        if (PhotonNetwork.PlayerList.Length == 1)
+        if (PhotonNetwork.IsMasterClient)
         {
             spawnPos = spawnLeft.position;
         }
@@ -30,5 +46,17 @@ public class GameManager : MonoBehaviour
             spawnPos,
             Quaternion.identity
         );
+    }
+
+    public void AddKill(int attackerID)
+    {
+        if (!playerScores.ContainsKey(attackerID))
+        {
+            playerScores[attackerID] = 0;
+        }
+
+        playerScores[attackerID]++;
+
+        Debug.Log("Player " + attackerID + " Score: " + playerScores[attackerID]);
     }
 }

@@ -1223,7 +1223,7 @@ GameObject:
   - component: {fileID: 420258465}
   m_Layer: 5
   m_Name: MultiplayerCanvas
-  m_TagString: Untagged
+  m_TagString: parent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1332,7 +1332,6 @@ MonoBehaviour:
   createPasswordInput: {fileID: 1805509831}
   joinRoomIdInput: {fileID: 1614176021}
   joinPasswordInput: {fileID: 1456885064}
-  photonLauncher: {fileID: 0}
 --- !u!1 &425134052
 GameObject:
   m_ObjectHideFlags: 0
