@@ -46,6 +46,7 @@ MonoBehaviour:
   - TakeDamage
   - RPC_HandleDeath
   - RPC_RespawnPlayer
+  - RPC_AddKill
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
