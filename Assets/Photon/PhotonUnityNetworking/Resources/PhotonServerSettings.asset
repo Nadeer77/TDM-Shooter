@@ -44,6 +44,8 @@ MonoBehaviour:
   - RPC_FireBullet
   - RPC_SetAimState
   - TakeDamage
+  - RPC_HandleDeath
+  - RPC_RespawnPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

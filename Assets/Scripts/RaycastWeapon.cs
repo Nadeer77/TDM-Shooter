@@ -65,6 +65,9 @@ public class RaycastWeapon : MonoBehaviour
 
     public void StartFiring()
     {
+        if (!playerView.IsMine)
+            return;
+
         isFiring = true;
         accumulatedTime = 0f;
         FireBullet();
@@ -133,7 +136,7 @@ public class RaycastWeapon : MonoBehaviour
 
             PlayerHealth targetHealth = hitInfo.collider.GetComponentInParent<PlayerHealth>();
 
-            if (targetHealth != null && playerView.IsMine)
+            if (targetHealth != null && targetHealth.gameObject != playerView.gameObject && playerView.IsMine)
             {
                 PhotonView targetPV = targetHealth.GetComponent<PhotonView>();
 
@@ -162,7 +165,7 @@ public class RaycastWeapon : MonoBehaviour
         Vector3 direction =
             (raycastDestination.position - raycastOrigin.position).normalized;
 
-        GetComponent<PhotonView>().RPC("RPC_FireBullet",RpcTarget.All,raycastOrigin.position,direction);
+        GetComponentInParent<PhotonView>().RPC("RPC_FireBullet", RpcTarget.All, raycastOrigin.position, direction);
     }
 
     [PunRPC]
