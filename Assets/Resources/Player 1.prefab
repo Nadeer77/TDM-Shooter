@@ -16359,6 +16359,10 @@ MonoBehaviour:
   fireRate: 25
   bulletSpeed: 150
   bulletDrop: 10
+  maxAmmo: 25
+  reloadTime: 3
+  ammoText: {fileID: 0}
+  reloadText: {fileID: 0}
   muzzleFlash:
   - {fileID: 3160493232967056279}
   - {fileID: 4632201112876152856}

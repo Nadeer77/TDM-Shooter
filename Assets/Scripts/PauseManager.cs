@@ -1,5 +1,4 @@
 using UnityEngine;
-using Photon.Pun;
 
 public class PauseManager : MonoBehaviour
 {
@@ -7,36 +6,29 @@ public class PauseManager : MonoBehaviour
     public bool isPaused;
 
     public static PauseManager Instance;
-    PlayerMovement localPlayer;
 
-    PhotonView pv;
+    PlayerMovement localMovement;
+    CharacterAiming localAiming;
+    RaycastWeapon localWeapon;
 
     void Awake()
     {
-        Instance=this;
+        Instance = this;
     }
+
     void Start()
     {
-        pv = GetComponent<PhotonView>();
         pausePanel.SetActive(false);
     }
 
-    // void Update()
-    // {
-    //     if (!pv.IsMine) return;
-
-    //     if (Input.GetKeyDown(KeyCode.Escape))
-    //     {
-    //         if (isPaused)
-    //             Resume();
-    //         else
-    //             Pause();
-    //     }
-    // }
-
     public void Pause()
     {
+        // Do not allow pause after game over
+        if (GameManager.isGameOver)
+            return;
+
         isPaused = true;
+
         pausePanel.SetActive(true);
 
         Cursor.visible = true;
@@ -47,7 +39,12 @@ public class PauseManager : MonoBehaviour
 
     public void Resume()
     {
+        // Do not resume if game already ended
+        if (GameManager.isGameOver)
+            return;
+
         isPaused = false;
+
         pausePanel.SetActive(false);
 
         Cursor.visible = false;
@@ -61,30 +58,29 @@ public class PauseManager : MonoBehaviour
         PhotonLauncher.Instance.LeaveRoom();
     }
 
-
+    // Called from PlayerMovement Start()
     public void RegisterLocalPlayer(PlayerMovement player)
     {
-        localPlayer = player;
+        localMovement = player;
+        localAiming = player.GetComponent<CharacterAiming>();
+        localWeapon = player.GetComponentInChildren<RaycastWeapon>();
     }
-
 
     void SetLocalPlayerActive(bool value)
     {
-        //PlayerMovement movement = FindFirstObjectByType<PlayerMovement>();
-        if (localPlayer != null)
-        {
-            localPlayer.enabled = value;
-            // Debug.Log("player movemnet assighnd");
-            
-        }
-        // else
-        // {
-        //     Debug.Log("player movement not assighned");
-        // }
-            
+        if (localMovement != null)
+            localMovement.enabled = value;
 
-        // //CharacterAiming aiming = FindFirstObjectByType<CharacterAiming>();
-        // if (aiming != null)
-        //     aiming.enabled = value;
+        if (localAiming != null)
+            localAiming.enabled = value;
+
+        if (localWeapon != null)
+            localWeapon.enabled = value;
     }
-} 
+
+    // Called by GameManager when match ends
+    public void DisablePlayerControls()
+    {
+        SetLocalPlayerActive(false);
+    }
+}

@@ -47,6 +47,7 @@ MonoBehaviour:
   - RPC_HandleDeath
   - RPC_RespawnPlayer
   - RPC_AddKill
+  - RPC_ShowGameOver
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

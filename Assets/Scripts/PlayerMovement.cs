@@ -39,21 +39,23 @@ public class PlayerMovement : MonoBehaviour
         if (!photonView.IsMine)
             return;
 
+        if(GameManager.isGameOver)
+            return;
+
         ApplyGravity();
         MovePlayer();
         RotateWithCamera();
         UpdateAnimations();
 
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (GameManager.isGameOver)
+                return;
+
             if (PauseManager.Instance.isPaused)
-            {
                 PauseManager.Instance.Resume();
-            }
             else
-            {
                 PauseManager.Instance.Pause();
-            }
         }
     }
 

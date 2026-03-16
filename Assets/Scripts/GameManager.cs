@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviourPun
 {
     public static GameManager Instance;
 
+    // Used by PauseManager
+    public static bool isGameOver = false;
+
     [Header("Spawn Points")]
     public Transform spawnLeft;
     public Transform spawnRight;
@@ -39,6 +42,8 @@ public class GameManager : MonoBehaviourPun
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
+
+        isGameOver = false;
     }
 
     void SpawnPlayer()
@@ -60,10 +65,11 @@ public class GameManager : MonoBehaviourPun
     // Called when a player kills another player
     public void AddKill(int attackerID)
     {
+        if(isGameOver)
+            return;
         photonView.RPC("RPC_AddKill", RpcTarget.All, attackerID);
     }
 
-    // Runs on ALL clients
     [PunRPC]
     void RPC_AddKill(int attackerID)
     {
@@ -99,30 +105,57 @@ public class GameManager : MonoBehaviourPun
     {
         if (playerScores[attackerID] >= winScore)
         {
-            ShowGameOver(attackerID);
+            photonView.RPC("RPC_ShowGameOver", RpcTarget.All, attackerID);
         }
     }
 
-    void ShowGameOver(int winnerID)
+    [PunRPC]
+    void RPC_ShowGameOver(int winnerID)
     {
+        isGameOver = true;
+
+        DisableLocalPlayerControls();
+
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         int myID = PhotonNetwork.LocalPlayer.ActorNumber;
 
         if (myID == winnerID)
         {
             resultText.text = "YOU WIN";
-            resultText.color = new Color(0f, 1f, 0.45f); // green
+            resultText.color = new Color(0f, 1f, 0.45f);
         }
         else
         {
             resultText.text = "YOU LOSE";
-            resultText.color = new Color(1f, 0.23f, 0.23f); // red
+            resultText.color = new Color(1f, 0.23f, 0.23f);
+        }
+    }
+    void DisableLocalPlayerControls()
+    {
+        PhotonView[] views = FindObjectsByType<PhotonView>(FindObjectsSortMode.None);
+
+        foreach (PhotonView view in views)
+        {
+            if (!view.IsMine)
+                continue;
+
+            PlayerMovement movement = view.GetComponent<PlayerMovement>();
+            if (movement) movement.enabled = false;
+
+            CharacterAiming aiming = view.GetComponent<CharacterAiming>();
+            if (aiming) aiming.enabled = false;
+
+            RaycastWeapon weapon = view.GetComponentInChildren<RaycastWeapon>();
+            if (weapon) weapon.enabled = false;
         }
     }
 
-    // Button function
+    // Button function for Main Menu
     public void ReturnToMainMenu()
     {
         PhotonNetwork.LeaveRoom();

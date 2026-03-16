@@ -47,6 +47,8 @@ public class CharacterAiming : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.isGameOver)
+            return;
         // INPUT ONLY FOR LOCAL PLAYER
         if (photonView.IsMine)
         {
